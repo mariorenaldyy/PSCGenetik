@@ -19,4 +19,3 @@ public class TestingRIO {
     }
     
 }
-halo semua 
