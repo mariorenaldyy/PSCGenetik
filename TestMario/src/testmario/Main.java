@@ -18,9 +18,9 @@ public class Main {
                     " | Fitness: " + population.getChromosomes()[x].getFitness());
         }
     }
-    public static String toString(BitSet chromosome){
+    public static String toString(MyBitSet chromosome){
         StringBuilder s = new StringBuilder();
-        for( int i = 0; i < chromosome.length();  i++ )
+        for( int i = 0; i < chromosome.realSize();  i++ )
         {
             s.append( chromosome.get(i) == true ? 1: 0 );
         }

@@ -1,13 +1,11 @@
 package testmario;
 
-import java.util.BitSet;
-
 public class Chromosome {
     private boolean isFitnessChanged = true;
     private int fitness = 0;
-    private BitSet genes;
+    private MyBitSet genes;
     public Chromosome(int length){
-        genes = new BitSet(length);
+        genes = new MyBitSet(length);
         genes.set(length-1, true);
     }
     public Chromosome initializeChromosome(){
@@ -18,7 +16,7 @@ public class Chromosome {
         }
         return this;
     }
-    public BitSet getGenes(){
+    public MyBitSet getGenes(){
         isFitnessChanged = true;
         return genes;
     }
@@ -40,7 +38,7 @@ public class Chromosome {
     }
     public String toString(){
         StringBuilder s = new StringBuilder();
-        for(int i=0; i<genes.length();i++)
+        for(int i=0; i<genes.realSize();i++)
         {
             s.append(genes.get(i) == true ? 1: 0 );
         }

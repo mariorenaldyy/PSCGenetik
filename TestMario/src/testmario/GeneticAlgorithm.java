@@ -1,12 +1,11 @@
 package testmario;
 
 import java.math.BigInteger;
-import java.util.BitSet;
 
 public class GeneticAlgorithm {
     public static final int POPULATION_SIZE = 8;
-    public static BitSet getTarget(){
-        BitSet target = new BitSet(41);
+    public static MyBitSet getTarget(){
+        MyBitSet target = new MyBitSet(41);
         target.set(3, true);
         target.set(5, true);
         target.set(13, true);
