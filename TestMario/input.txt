@@ -1,0 +1,9 @@
+30
+7 7
+x 0 x x 1 x x
+x x x x x x 0
+n x x x x x x
+x x x x x x x
+x x x x x x 1
+1 x x x x x x
+x x 2 x x 2 x

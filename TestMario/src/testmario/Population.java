@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 public class Population {
     private Chromosome[] chromosomes;
+    
     public Population(int length){
         chromosomes = new Chromosome[length];
     }
