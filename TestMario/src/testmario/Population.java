@@ -9,7 +9,7 @@ public class Population {
     }
     public Population initializePopulation(){
         for(int i=0;i<chromosomes.length;i++){
-            chromosomes[i] = new Chromosome(GeneticAlgorithm.getTarget().length()).initializeChromosome();
+            chromosomes[i] = new Chromosome(GeneticAlgorithm.arrSize).initializeChromosome();
         }
         sortChromosomesByFitness();
         return this;

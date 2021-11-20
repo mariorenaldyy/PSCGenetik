@@ -3,22 +3,18 @@ package testmario;
 import java.math.BigInteger;
 
 public class GeneticAlgorithm {
-    public static final int POPULATION_SIZE = 8;
-    public static MyBitSet getTarget(){
-        MyBitSet target = new MyBitSet(41);
-        target.set(3, true);
-        target.set(5, true);
-        target.set(13, true);
-        target.set(23, true);
-        target.set(24, true);
-        target.set(31, true);
-        target.set(37, true);
-        target.set(39, true);
-        target.set(40, true);
-        return target;
-    }
+    public static final int POPULATION_SIZE = 10;
+    public static int rowSize = 7;
+    public static char[] puzzle = {'x', '0', 'x', 'x', '1', 'x', 'x',
+                                  'x', 'x', 'x', 'x', 'x', 'x', '0',
+                                  'n', 'x', 'x', 'x', 'x', 'x', 'x',
+                                  'x', 'x', 'x', 'x', 'x', 'x', 'x',
+                                  'x', 'x', 'x', 'x', 'x', 'x', '1',
+                                  '1', 'x', 'x', 'x', 'x', 'x', 'x',
+                                  'x', 'x', '2', 'x', 'x', '2', 'x'};
+    public static int arrSize = puzzle.length;
     public static final double MUTATION_RATE = 0.25;
-    public static final int NUMB_OF_ELITE_CHROMOSOMES = 1;
+    public static final int NUMB_OF_ELITE_CHROMOSOMES = 3;
     public static final int TOURNAMENT_SELECTION_SIZE = 4;
     
     public Population evolve(Population population){
@@ -47,20 +43,25 @@ public class GeneticAlgorithm {
         return mutatePopulation;
     }
     private Chromosome crossoverChromosome(Chromosome chromosome1, Chromosome chromosome2){
-        Chromosome crossoverChromosome = new Chromosome(getTarget().realSize());
-        for(int i = 0; i<chromosome1.getGenes().realSize();i++){
-            if(Math.random() < 0.5) crossoverChromosome.getGenes().set(i, chromosome1.getGenes().get(i));
-            else crossoverChromosome.getGenes().set(i, chromosome2.getGenes().get(i));
+        Chromosome crossoverChromosome = new Chromosome(arrSize);
+        for(int i = 0; i<chromosome1.getGenes().length;i++){
+            if(Math.random() < 0.5) crossoverChromosome.getGenes()[i] = chromosome1.getGenes()[i];
+            else crossoverChromosome.getGenes()[i] = chromosome2.getGenes()[i];
         }
         return crossoverChromosome;
     }
     private Chromosome mutateChromosome(Chromosome chromosome){
-        Chromosome mutateChromosome = new Chromosome(getTarget().realSize());
-        for(int i = 0; i<chromosome.getGenes().realSize();i++){
-            if(Math.random() < MUTATION_RATE){
-                if(Math.random() < 0.5) mutateChromosome.getGenes().set(i, true);
-                else mutateChromosome.getGenes().set(i, false);
-            } else mutateChromosome.getGenes().set(i, chromosome.getGenes().get(i));
+        Chromosome mutateChromosome = new Chromosome(arrSize);
+        for(int i = 0; i<chromosome.getGenes().length;i++){
+            if(chromosome.getGenes()[i] == 'x' || chromosome.getGenes()[i] == 'y'){
+                if(Math.random() < MUTATION_RATE){
+                    if(Math.random() < 0.5) mutateChromosome.getGenes()[i] = 'y';
+                    else mutateChromosome.getGenes()[i] = 'x';
+                } else mutateChromosome.getGenes()[i] = chromosome.getGenes()[i];
+            }
+            else{
+                mutateChromosome.getGenes()[i] = chromosome.getGenes()[i];
+            }
         }
         return mutateChromosome;
     }

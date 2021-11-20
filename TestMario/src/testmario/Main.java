@@ -1,7 +1,6 @@
 package testmario;
 
 import java.util.Arrays;
-import java.util.BitSet;
 
 public class Main {
     public static void main(String[] args) {
@@ -9,30 +8,29 @@ public class Main {
         GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm();
         System.out.println("-------------------------------------------------");
         System.out.println("Generation # 0" + " | Fittest chromosome fitness: " + population.getChromosomes()[0].getFitness());
-        printPopulation(population, "Target Chromosome: " + toString(GeneticAlgorithm.getTarget()));
+        printPopulation(population);
         int generationNumber = 0;
-        while(population.getChromosomes()[0].getFitness() < GeneticAlgorithm.getTarget().realSize()){
+        while(population.getChromosomes()[0].getFitness() < 100){
             generationNumber++;
             System.out.println("\n-------------------------------------------------");
             population = geneticAlgorithm.evolve(population);
             population.sortChromosomesByFitness();
             System.out.println("Generation # " +generationNumber+" | Fittest chromosome fitness: " + population.getChromosomes()[0].getFitness());
-            printPopulation(population, "Target Chromosome: " + toString(GeneticAlgorithm.getTarget()));
+            printPopulation(population);
         }
     }
-    public static void printPopulation(Population population, String heading){
-        System.out.println(heading);
+    public static void printPopulation(Population population){
         System.out.println("-------------------------------------------------");
         for(int x = 0; x<population.getChromosomes().length;x++){
             System.out.println("Chromosome # "+ x + " : " + toString(population.getChromosomes()[x].getGenes())+
                     " | Fitness: " + population.getChromosomes()[x].getFitness());
         }
     }
-    public static String toString(MyBitSet chromosome){
+    public static String toString(char[] chromosome){
         StringBuilder s = new StringBuilder();
-        for( int i = 0; i < chromosome.realSize();  i++ )
+        for( int i = 0; i < chromosome.length;  i++ )
         {
-            s.append( chromosome.get(i) == true ? 1: 0 );
+            s.append(chromosome[i]);
         }
         return s.toString();
     }
