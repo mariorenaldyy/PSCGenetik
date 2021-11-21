@@ -1,8 +1,9 @@
 package testmario;
 
+//sumber kode algoritma genetik dari https://www.youtube.com/watch?v=UcVJsV-tqlo dan kode program yang diberikan ko Lionov di teams
+
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.Arrays;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -10,60 +11,56 @@ public class Main {
     public static Random rand;
     
     public static void main(String[] args) throws FileNotFoundException {
-        rand = new Random();
-        long seed = rand.nextLong();
-        rand.setSeed(seed);
+        rand = new Random(); //buat objek Random untuk seluruh algoritma
+        long seed = rand.nextLong(); //buat seed untuk disimpan
+        rand.setSeed(seed); //set objek Random dengan seed yang dibuat untuk generasi pertama
         
         //input
-        Scanner sc = new Scanner(new File("input2.txt"));
-        int generationNum = sc.nextInt();
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Insert the number of loop: ");
+        int loop = sc.nextInt(); //input banyak loop
+        System.out.print("Insert the number of generation for every loop: ");
+        int generation = sc.nextInt(); //input banyak generasi pada setiap loop
+        System.out.println();
+
+        sc = new Scanner(new File("input.txt"));
         int rowSize = sc.nextInt();
         int colSize = sc.nextInt();
-        GeneticAlgorithm.rowSize = rowSize;
-        GeneticAlgorithm.colSize = colSize;
-        GeneticAlgorithm.arrSize = rowSize*colSize;
+        GeneticAlgorithm.rowSize = rowSize; //isi jumlah baris puzzle dari input text
+        GeneticAlgorithm.colSize = colSize; //isi jumlah kolom puzzle dari input text
+        GeneticAlgorithm.arrSize = rowSize*colSize; //isi besar array puzzle
         
-        GeneticAlgorithm.puzzle = new char[(rowSize*colSize)];
+        GeneticAlgorithm.puzzle = new char[(rowSize*colSize)]; //instansiasi puzzle (array char dengan besar baris*kolom)
         for(int i=0;i<(rowSize*colSize);i++){
-            GeneticAlgorithm.puzzle[i] = sc.next().charAt(0);
+            GeneticAlgorithm.puzzle[i] = sc.next().charAt(0); //isi array char/puzzle dengan input text
         }
-        
-        sc = new Scanner(System.in);
-        int loop = sc.nextInt();
-        for(int i=1;i<=loop;i++){
-            seed = rand.nextLong();
-            rand.setSeed(seed);
+
+        for(int i=1;i<=loop;i++){ //lakukan algoritma genetik sebanyak loop input
+            seed = rand.nextLong();  //buat seed baru untuk generasi selanjutnya
+            rand.setSeed(seed); //set seed baru pada objek Random
             
-            Population population = new Population(GeneticAlgorithm.POPULATION_SIZE).initializePopulation();
-            GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm();
-    //        System.out.println("-------------------------------------------------");
-    //        System.out.println("Generation # 1" + " | Fittest chromosome fitness: " + population.getChromosomes()[0].getFitness());
-    //        printPopulation(population);
-            int currGen = 1;
-            while(currGen < generationNum){
+            Population population = new Population(GeneticAlgorithm.POPULATION_SIZE).initializePopulation(); //buat populasi dengan isi kromosom random
+            GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm(); //buat objek GeneticAlgorithm untuk memanggil method evolve (crossover dan mutasi populasi)
+            int currGen = 1; //simpan generasi saat ini
+            while(currGen < generation){ //evolusi populasi sebanyak generasi input
                 currGen++;
-    //            System.out.println("\n-------------------------------------------------");
-                population = geneticAlgorithm.evolve(population);
-                population.sortChromosomesByFitness();
-    //            System.out.println("Generation # " +generationNumber+" | Fittest chromosome fitness: " + population.getChromosomes()[0].getFitness());
-    //            printPopulation(population);
+                population = geneticAlgorithm.evolve(population); //evolusi populasi untuk generasi saat ini
+                population.sortChromosomesByFitness(); //sort populasi dari fitness terbesar ke terkecil
             }
-            System.out.printf("%2d: Fitness = %d (%s) Seed: %d%n",i,population.getChromosomes()[0].getFitness(),toString(population.getChromosomes()[0].getGenes()),seed);
+            System.out.println("----------------------------------------------------");
+            System.out.printf("%d: Fitness = %d Seed: %d%n",i,population.getChromosomes()[0].getFitness(),seed); //print fitness kromosom terbesar dengan seed random saat ini
+            printGenes(population.getChromosomes()[0].getGenes()); //print hasil kromosom / solusi puzzle dengan fitness terbesar pada generasi saat ini
         }
     }
-    public static void printPopulation(Population population){
-        System.out.println("-------------------------------------------------");
-        for(int x = 0; x<population.getChromosomes().length;x++){
-            System.out.println("Chromosome # "+ x + " : " + toString(population.getChromosomes()[x].getGenes())+
-                    " | Fitness: " + population.getChromosomes()[x].getFitness());
+    public static void printGenes(char[] genes){ //print kromosom / solusi puzzle yang ditemukan
+        int i = 0;
+        while(i<genes.length){
+            for(int j = 0; j<GeneticAlgorithm.colSize;j++){
+                System.out.print(genes[i]);
+                i++;
+            }
+            System.out.println();
         }
-    }
-    public static String toString(char[] chromosome){
-        StringBuilder s = new StringBuilder();
-        for( int i = 0; i < chromosome.length;  i++ )
-        {
-            s.append(chromosome[i]);
-        }
-        return s.toString();
+        System.out.println();
     }
 }
