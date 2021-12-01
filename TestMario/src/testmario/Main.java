@@ -41,7 +41,7 @@ public class Main {
 
         System.out.println();
 
-        sc = new Scanner(new File("input.txt"));
+        sc = new Scanner(new File("input2.txt"));
         int rowSize = sc.nextInt();
         int colSize = sc.nextInt();
         GeneticAlgorithm.rowSize = rowSize; //isi jumlah baris puzzle dari input text
