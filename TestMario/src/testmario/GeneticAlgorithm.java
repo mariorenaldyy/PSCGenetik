@@ -49,10 +49,16 @@ public class GeneticAlgorithm {
         Chromosome mutateChromosome = new Chromosome(arrSize); //buat kromosom baru untuk dikembalikan setelah mutasi
         for(int i = 0; i<chromosome.getGenes().length;i++){ //lakukan random mutasi setiap gen yang berisi petak kosong atau lampu
             if(chromosome.getGenes()[i] == 'x' || chromosome.getGenes()[i] == 'y'){ //jika gen dengan idx saat ini adalah petak kosong atau lampu, lakukan mutasi
-                if(Main.rand.nextFloat() < MUTATION_RATE){ //jika hasil random lebih kecil dari rate mutasi, lakukan mutasi
-                    if(Main.rand.nextFloat() < 0.5) mutateChromosome.getGenes()[i] = 'y'; //jika hasil random lebih kecil dari 0.5, mutasi/isi gen idx ini dengan lampu
-                    else mutateChromosome.getGenes()[i] = 'x'; //jika hasil random lebih besar sama dengan 0.5, mutasi/isi gen idx ini dengan petak kosong
-                } else mutateChromosome.getGenes()[i] = chromosome.getGenes()[i]; //jika hasil random lebih besar atau sama dengan rate mutasi, mutasi tidak dilakukan untuk gen idx ini
+                boolean eligible = checkMutationEligibility(i);
+                if(eligible){
+                    if(Main.rand.nextFloat() < MUTATION_RATE){ //jika hasil random lebih kecil dari rate mutasi, lakukan mutasi
+                        if(Main.rand.nextFloat() < 0.5) mutateChromosome.getGenes()[i] = 'y'; //jika hasil random lebih kecil dari 0.5, mutasi/isi gen idx ini dengan lampu
+                        else mutateChromosome.getGenes()[i] = 'x'; //jika hasil random lebih besar sama dengan 0.5, mutasi/isi gen idx ini dengan petak kosong
+                    } else mutateChromosome.getGenes()[i] = chromosome.getGenes()[i]; //jika hasil random lebih besar atau sama dengan rate mutasi, mutasi tidak dilakukan untuk gen idx ini
+                }
+                else{
+                    mutateChromosome.getGenes()[i] = chromosome.getGenes()[i];
+                }
             }
             else{
                 mutateChromosome.getGenes()[i] = chromosome.getGenes()[i]; //jika gen pada idx adalah tembok, tidak dilakukan mutasi
@@ -67,5 +73,38 @@ public class GeneticAlgorithm {
         }
         tournamentPopulation.sortChromosomesByFitness(); //sort populasi seleksi dari fitness terbesar ke terkecil
         return tournamentPopulation; //kembalikan hasil populasi seleksi
+    }
+    private boolean checkMutationEligibility(int i){ //cek apakah petak idx i boleh dimutasi
+        int currMaxColIdx = colSize; //buat variabel untuk menandakan batas kanan dari baris gen yang diakses, mula mula isi dengan jumlah kolom
+        while(currMaxColIdx <= i){ //jika gen yang diakses berada pada baris yang berbeda (dibawah) dari baris batas, geser batas ke baris selanjutnya
+            currMaxColIdx += currMaxColIdx;
+        }
+        int currMinColIdx = colSize*(colSize-1) - 1; //buat variabel untuk menandakan batas kiri dari baris gen yang diakses, mula mula isi dengan batas kiri baris terakhir dari puzzle
+        while(currMinColIdx >= i){ //jika gen yang diakses berada pada baris yang berbeda (diatas) dari baris batas, geser batas ke baris sebelumnya
+            currMinColIdx -= colSize;
+        }
+        boolean eligible = true;
+        if(i+1 < puzzle.length && i+1 < currMaxColIdx){ //cek kanan apakah ada lampu
+            if(puzzle[i+1] == '0'){
+                eligible = false;
+            }
+        }
+        if(eligible && i-1 > -1 && i-1 > currMinColIdx){ //cek kiri apakah ada lampu
+            if(puzzle[i-1] == '0'){
+                eligible = false;
+            }
+        }
+        if(eligible && i-colSize > -1){ //cek atas apakah ada lampu
+            if(puzzle[i-colSize] == '0'){
+                eligible = false;
+            }
+        }
+        if(eligible && i+colSize < puzzle.length){ //cek bawah apakah ada lampu
+            if(puzzle[i+colSize] == '0'){
+                eligible = false;
+            }
+        }
+
+        return eligible;
     }
 }

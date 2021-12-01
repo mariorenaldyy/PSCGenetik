@@ -13,8 +13,44 @@ public class Chromosome {
         char[] puzzle = GeneticAlgorithm.puzzle; //buat kromosom/puzzle baru untuk dikembalikan setelah diinisialisasi secara random
         for(int i=0;i<genes.length;i++){ //lakukan iterasi untuk seluruh jumlah gen
             if(puzzle[i] == 'x'){ //jika gen dgn idx saat ini adalah petak kosong, ubah menjadi lampu secara random
-                if(Main.rand.nextFloat() >= 0.5) genes[i] = 'y'; //jika hasil random lebih besar sama dengan 0.5, ubah petak kosong dengan lampu
-                else genes[i] = 'x'; //jika hasil random lebih kecil dari 0.5, petak kosong tidak diubah
+                int colSize = GeneticAlgorithm.colSize; //simpan jumlah kolom puzzle pada suatu variabel agar tidak perlu mengakses kelas GeneticAlgorithm berulang kali
+                int currMaxColIdx = colSize; //buat variabel untuk menandakan batas kanan dari baris gen yang diakses, mula mula isi dengan jumlah kolom
+                while(currMaxColIdx <= i){ //jika gen yang diakses berada pada baris yang berbeda (dibawah) dari baris batas, geser batas ke baris selanjutnya
+                    currMaxColIdx += currMaxColIdx;
+                }
+                int currMinColIdx = colSize*(colSize-1) - 1; //buat variabel untuk menandakan batas kiri dari baris gen yang diakses, mula mula isi dengan batas kiri baris terakhir dari puzzle
+                while(currMinColIdx >= i){ //jika gen yang diakses berada pada baris yang berbeda (diatas) dari baris batas, geser batas ke baris sebelumnya
+                    currMinColIdx -= colSize;
+                }
+                boolean beradaDiSampingTembokNol = false;
+                if(i+1 < puzzle.length && i+1 < currMaxColIdx){ //cek kanan apakah ada lampu
+                    if(puzzle[i+1] == '0'){
+                        beradaDiSampingTembokNol = true;
+                    }
+                }
+                if(!beradaDiSampingTembokNol && i-1 > -1 && i-1 > currMinColIdx){ //cek kiri apakah ada lampu
+                    if(puzzle[i-1] == '0'){
+                        beradaDiSampingTembokNol = true;
+                    }
+                }
+                if(!beradaDiSampingTembokNol && i-colSize > -1){ //cek atas apakah ada lampu
+                    if(puzzle[i-colSize] == '0'){
+                        beradaDiSampingTembokNol = true;
+                    }
+                }
+                if(!beradaDiSampingTembokNol && i+colSize < puzzle.length){ //cek bawah apakah ada lampu
+                    if(puzzle[i+colSize] == '0'){
+                        beradaDiSampingTembokNol = true;
+                    }
+                }
+
+                if(!beradaDiSampingTembokNol){
+                    if(Main.rand.nextFloat() >= 0.5) genes[i] = 'y'; //jika hasil random lebih besar sama dengan 0.5, ubah petak kosong dengan lampu
+                    else genes[i] = 'x'; //jika hasil random lebih kecil dari 0.5, petak kosong tidak diubah
+                }
+                else{
+                    genes[i] = puzzle[i];
+                }
             }
             else{
                 genes[i] = puzzle[i]; //jika gen pada idx saat ini bukan petak kosong (tembok), maka isi kromosom baru dengan tembok yang sama
@@ -39,7 +75,7 @@ public class Chromosome {
             int colSize = GeneticAlgorithm.colSize; //simpan jumlah kolom puzzle pada suatu variabel agar tidak perlu mengakses kelas GeneticAlgorithm berulang kali
             int currMaxColIdx = colSize; //buat variabel untuk menandakan batas kanan dari baris gen yang diakses, mula mula isi dengan jumlah kolom
             while(currMaxColIdx <= x){ //jika gen yang diakses berada pada baris yang berbeda (dibawah) dari baris batas, geser batas ke baris selanjutnya
-                currMaxColIdx += currMaxColIdx;
+                currMaxColIdx += colSize;
             }
             int currMinColIdx = colSize*(colSize-1) - 1; //buat variabel untuk menandakan batas kiri dari baris gen yang diakses, mula mula isi dengan batas kiri baris terakhir dari puzzle
             while(currMinColIdx >= x){ //jika gen yang diakses berada pada baris yang berbeda (diatas) dari baris batas, geser batas ke baris sebelumnya
@@ -55,6 +91,7 @@ public class Chromosome {
                         }
                         else if(genes[y] == 'y'){ //jika lampu ini bentrok dengan lampu lain, kurangi fitness
                             chromosomeFitness--;
+                            break;
                         }
                     }
                     else{
@@ -71,6 +108,7 @@ public class Chromosome {
                         }
                         else if(genes[y] == 'y'){ //jika lampu ini bentrok dengan lampu lain, kurangi fitness
                             chromosomeFitness--;
+                            break;
                         }
                     }
                     else{
@@ -87,6 +125,7 @@ public class Chromosome {
                         }
                         else if(genes[y] == 'y'){ //jika lampu ini bentrok dengan lampu lain, kurangi fitness
                             chromosomeFitness--;
+                            break;
                         }
                     }
                     else{
@@ -103,6 +142,7 @@ public class Chromosome {
                         }
                         else if(genes[y] == 'y'){ //jika lampu ini bentrok dengan lampu lain, kurangi fitness
                             chromosomeFitness--;
+                            break;
                         }
                     }
                     else{
@@ -114,7 +154,6 @@ public class Chromosome {
                 if(genes[x] != 'n'){ //jika tembok memiliki angka, hitung jumlah lampu disekitarnya, kurangi fitness jika kekurangan atau kelebihan
                     int angkaTembok = Character.getNumericValue(genes[x]);
                     int countBulb = 0;
-                    int y = x;
                     if(x+1 < genes.length && x+1 < currMaxColIdx){ //cek kanan apakah ada lampu
                         if(genes[x+1] == 'y'){
                             countBulb++; //tambahkan jumlah lampu jika ditemukan
