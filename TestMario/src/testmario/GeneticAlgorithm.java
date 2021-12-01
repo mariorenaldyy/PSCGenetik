@@ -3,14 +3,14 @@ package testmario;
 //sumber kode algoritma genetik dari https://www.youtube.com/watch?v=UcVJsV-tqlo dan kode program yang diberikan ko Lionov di teams
 
 public class GeneticAlgorithm {
-    public static final int POPULATION_SIZE = 10; //jumlah populasi untuk setiap generasi
+    public static int POPULATION_SIZE; //jumlah populasi untuk setiap generasi
     public static int rowSize; //jumlah baris pada puzzle (didapatkan dari input)
     public static int colSize; //jumlah kolom pada puzzle (didapatkan dari input)
     public static char[] puzzle; //array char yang berisi petak atau tembok pada puzzle sesuai input
     public static int arrSize; //jumlah petak dan tembok pada puzzle
-    public static final double MUTATION_RATE = 0.25; //rate dilakukannya mutasi
-    public static final int NUMB_OF_ELITE_CHROMOSOMES = 3; //jumlah kromosom elit (fitness terbesar) yang akan disimpan untuk setiap generasi
-    public static final int TOURNAMENT_SELECTION_SIZE = 4; //besarnya populasi seleksi
+    public static double MUTATION_RATE; //rate dilakukannya mutasi
+    public static int NUMB_OF_ELITE_CHROMOSOMES; //jumlah kromosom elit (fitness terbesar) yang akan disimpan untuk setiap generasi
+    public static int TOURNAMENT_SELECTION_SIZE; //besarnya populasi seleksi
     
     public Population evolve(Population population){ //crossover dan mutasi populasi
         return mutatePopulation(crossoverPopulation(population));

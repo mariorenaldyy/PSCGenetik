@@ -19,8 +19,26 @@ public class Main {
         Scanner sc = new Scanner(System.in);
         System.out.print("Insert the number of loop: ");
         int loop = sc.nextInt(); //input banyak loop
+
         System.out.print("Insert the number of generation for every loop: ");
         int generation = sc.nextInt(); //input banyak generasi pada setiap loop
+
+        System.out.print("Insert the number of population for every generation: ");
+        int populationSize = sc.nextInt(); //input banyak populasi pada setiap generasi
+        GeneticAlgorithm.POPULATION_SIZE = populationSize;
+
+        System.out.print("Insert the number of population for selection: ");
+        int selectionSize = sc.nextInt(); //input banyak populasi seleksi
+        GeneticAlgorithm.TOURNAMENT_SELECTION_SIZE = selectionSize;
+
+        System.out.print("Insert the number of elite chromosome: ");
+        int eliteSize = sc.nextInt(); //input banyak kromosom elit (jmlh kromosom terbaik yang akan disimpan pada setiap generasi)
+        GeneticAlgorithm.NUMB_OF_ELITE_CHROMOSOMES = eliteSize;
+
+        System.out.print("Insert the rate of mutation for every gene (0.0 - 1.0): ");
+        double mutationRate = sc.nextDouble(); //input kemungkinan terjadinya mutasi
+        GeneticAlgorithm.MUTATION_RATE = mutationRate;
+
         System.out.println();
 
         sc = new Scanner(new File("input.txt"));
