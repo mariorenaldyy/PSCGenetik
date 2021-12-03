@@ -74,7 +74,15 @@ public class Main {
         int i = 0;
         while(i<genes.length){
             for(int j = 0; j<GeneticAlgorithm.colSize;j++){
-                System.out.print(genes[i]);
+                if (genes[i] == 'a'){
+                    System.out.print('x');
+                }
+                else if (genes[i] == 'b'){
+                    System.out.print('y');
+                }
+                else {
+                    System.out.print(genes[i]);
+                }
                 i++;
             }
             System.out.println();

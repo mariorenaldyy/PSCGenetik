@@ -49,16 +49,10 @@ public class GeneticAlgorithm {
         Chromosome mutateChromosome = new Chromosome(arrSize); //buat kromosom baru untuk dikembalikan setelah mutasi
         for(int i = 0; i<chromosome.getGenes().length;i++){ //lakukan random mutasi setiap gen yang berisi petak kosong atau lampu
             if(chromosome.getGenes()[i] == 'x' || chromosome.getGenes()[i] == 'y'){ //jika gen dengan idx saat ini adalah petak kosong atau lampu, lakukan mutasi
-                boolean eligible = checkMutationEligibility(i); //cek apakah petak kosong dapat dimutasi (tidak disamping tembok berangka 0)
-                if(eligible){ //jika petak kosong dapat dimutasi, lakukan mutasi dengan kemungkinan MUTATION_RATE
-                    if(Main.rand.nextFloat() < MUTATION_RATE){ //jika hasil random lebih kecil dari rate mutasi, lakukan mutasi
-                        if(Main.rand.nextFloat() < 0.5) mutateChromosome.getGenes()[i] = 'y'; //jika hasil random lebih kecil dari 0.5, mutasi/isi gen idx ini dengan lampu
-                        else mutateChromosome.getGenes()[i] = 'x'; //jika hasil random lebih besar sama dengan 0.5, mutasi/isi gen idx ini dengan petak kosong
-                    } else mutateChromosome.getGenes()[i] = chromosome.getGenes()[i]; //jika hasil random lebih besar atau sama dengan rate mutasi, mutasi tidak dilakukan untuk gen idx ini (isi gen mutateChromosome dengan gen chromosome awal)
-                }
-                else{ //jika petak kosong tidak dapat dimutasi, isi gen mutateChromosome dengan gen chromosome awal
-                    mutateChromosome.getGenes()[i] = chromosome.getGenes()[i];
-                }
+                if(Main.rand.nextFloat() < MUTATION_RATE){ //jika hasil random lebih kecil dari rate mutasi, lakukan mutasi
+                    if(Main.rand.nextFloat() < 0.5) mutateChromosome.getGenes()[i] = 'y'; //jika hasil random lebih kecil dari 0.5, mutasi/isi gen idx ini dengan lampu
+                    else mutateChromosome.getGenes()[i] = 'x'; //jika hasil random lebih besar sama dengan 0.5, mutasi/isi gen idx ini dengan petak kosong
+                } else mutateChromosome.getGenes()[i] = chromosome.getGenes()[i]; //jika hasil random lebih besar atau sama dengan rate mutasi, mutasi tidak dilakukan untuk gen idx ini (isi gen mutateChromosome dengan gen chromosome awal)
             }
             else{
                 mutateChromosome.getGenes()[i] = chromosome.getGenes()[i]; //jika gen pada idx adalah tembok, tidak dilakukan mutasi
@@ -73,44 +67,5 @@ public class GeneticAlgorithm {
         }
         tournamentPopulation.sortChromosomesByFitness(); //sort populasi seleksi dari fitness terbesar ke terkecil
         return tournamentPopulation; //kembalikan hasil populasi seleksi
-    }
-    private boolean checkMutationEligibility(int i){ //cek apakah petak idx i boleh dimutasi
-        int currMaxColIdx = getMaxColIdx(colSize, i); //dapatkan batas kanan dari baris gen yang diakses
-        int currMinColIdx = getMinColIdx(colSize, i); //dapatkan batas kiri dari baris gen yang diakses
-        if(i+1 < puzzle.length && i+1 < currMaxColIdx){ //cek kanan apakah ada tembok berangka 0
-            if(puzzle[i+1] == '0'){
-                return false; //jika ya, kembalikan status false (petak tidak boleh dimutasi)
-            }
-        }
-        if(i-1 > -1 && i-1 > currMinColIdx){ //cek kiri apakah ada tembok berangka 0
-            if(puzzle[i-1] == '0'){
-                return false; //jika ya, kembalikan status false (petak tidak boleh dimutasi)
-            }
-        }
-        if(i-colSize > -1){ //cek atas apakah ada tembok berangka 0
-            if(puzzle[i-colSize] == '0'){
-                return false; //jika ya, kembalikan status false (petak tidak boleh dimutasi)
-            }
-        }
-        if(i+colSize < puzzle.length){ //cek bawah apakah ada tembok berangka 0
-            if(puzzle[i+colSize] == '0'){
-                return false; //jika ya, kembalikan status false (petak tidak boleh dimutasi)
-            }
-        }
-        return true; //jika tidak ada tembok berangka 0 disekitar petak, kembalikan status true (petak boleh dimutasi)
-    }
-    private int getMaxColIdx(int colSize, int x) { //method untuk mencari batas kanan dari baris suatu gen/petak
-        int currMaxColIdx = colSize; //variabel batas kanan mula mula diisi dengan jumlah kolom
-        while(currMaxColIdx <= x){ //jika gen yang diakses berada pada baris yang berbeda (dibawah) dari baris batas, geser batas ke baris selanjutnya
-            currMaxColIdx += colSize;
-        }
-        return currMaxColIdx;
-    }
-    private int getMinColIdx(int colSize, int x) { //method untuk mencari batas kiri dari baris suatu gen/petak
-        int currMinColIdx = colSize*(colSize-1) - 1; //variabel batas kiri mula mula diisi dengan batas kiri baris terakhir dari puzzle
-        while(currMinColIdx >= x){ //jika gen yang diakses berada pada baris yang berbeda (diatas) dari baris batas, geser batas ke baris sebelumnya
-            currMinColIdx -= colSize;
-        }
-        return currMinColIdx;
     }
 }
