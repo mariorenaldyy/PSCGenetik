@@ -1,12 +1,14 @@
 package testmario;
 
-//sumber kode algoritma genetik dari https://www.youtube.com/watch?v=UcVJsV-tqlo dan kode program yang diberikan ko Lionov di teams
+//sumber kode algoritma genetik dari https://www.youtube.com/watch?v=UcVJsV-tqlo
+//penggunaan random dan format output dari program yang diberikan ko Lionov di teams
 
 public class GeneticAlgorithm {
     public static int POPULATION_SIZE; //jumlah populasi untuk setiap generasi
     public static int rowSize; //jumlah baris pada puzzle (didapatkan dari input)
     public static int colSize; //jumlah kolom pada puzzle (didapatkan dari input)
     public static char[] puzzle; //array char yang berisi petak atau tembok pada puzzle sesuai input
+    public static char[] definedPuzzle; //puzzle yang sudah diisi dengan petak kosong atau lampu pada posisi yang sudah pasti
     public static int arrSize; //jumlah petak dan tembok pada puzzle
     public static double MUTATION_RATE; //rate dilakukannya mutasi
     public static int NUMB_OF_ELITE_CHROMOSOMES; //jumlah kromosom elit (fitness terbesar) yang akan disimpan untuk setiap generasi
@@ -39,10 +41,7 @@ public class GeneticAlgorithm {
     }
     private Chromosome crossoverChromosome(Chromosome chromosome1, Chromosome chromosome2){ //crossover kromosom dari hasil seleksi pada method crossoverPopulation
         Chromosome crossoverChromosome = new Chromosome(arrSize); //buat kromosom baru untuk dikembalikan setelah crossover
-        for(int i = 0; i<chromosome1.getGenes().length;i++){ //isi setiap gen kromosom baru dengan gen kromosom induk 1 atau kromosom induk 2 secara random
-            if(Main.rand.nextFloat() < 0.5) crossoverChromosome.getGenes()[i] = chromosome1.getGenes()[i]; //jika hasil random lebih kecil dari 0.5, isi gen kromosom baru dengan gen kromosom induk 1 pada index yang sama
-            else crossoverChromosome.getGenes()[i] = chromosome2.getGenes()[i]; //jika hasil random lebih besar sama dengan 0.5, isi gen kromosom baru dengan gen kromosom induk 2 pada index yang sama
-        }
+        crossoverChromosome = rowCrossover(chromosome1, chromosome2); //digunakan method uniform crossover tetapi untuk tiap baris berbeda
         return crossoverChromosome; //kembalikan hasil kromosom crossover
     }
     private Chromosome mutateChromosome(Chromosome chromosome){ //mutasi kromosom bukan elit
@@ -67,5 +66,40 @@ public class GeneticAlgorithm {
         }
         tournamentPopulation.sortChromosomesByFitness(); //sort populasi seleksi dari fitness terbesar ke terkecil
         return tournamentPopulation; //kembalikan hasil populasi seleksi
+    }
+    private Chromosome rowCrossover(Chromosome chromosome1, Chromosome chromosome2){ //teknik uniform crossover untuk setiap baris
+        Chromosome crossoverChromosome = new Chromosome(arrSize); //buat kromosom baru untuk dikembalikan setelah crossover
+        int colSize = GeneticAlgorithm.colSize; //simpan jumlah kolom puzzle
+        int rowMarker = colSize; //variabel untuk menandakan apakah telah terjadi pergantian baris
+        int rowIdx = 0; //variabel penanda baris berapa saat ini
+        if(Main.rand.nextFloat() < 0.5){ //jika random lebih kecil dari 0.5
+            for(int i = 0; i<chromosome1.getGenes().length;i++){ //iterasi seluruh gen kromosom
+                if(i >= rowMarker){ //jika idx yg diakses lebih besar atau sama dengan rowMarker, maka telah terjadi pergantian baris
+                    rowIdx++; //tambah nilai rowIdx
+                    rowMarker += colSize; //ubah rowMarker ke baris baru
+                }
+                if(rowIdx%2 == 0){ //jika idx baris saat ini habis dibagi 2, isi seluruh baris dengan gen kromosom 1
+                    crossoverChromosome.getGenes()[i] = chromosome1.getGenes()[i];
+                }
+                else{ //jika idx baris saat ini tidak dibagi 2, isi seluruh baris dengan gen kromosom 2
+                    crossoverChromosome.getGenes()[i] = chromosome2.getGenes()[i];
+                }
+            }
+        }
+        else{ //jika random lebih besar atau sama dengan 0.5
+            for(int i = 0; i<chromosome1.getGenes().length;i++){ //iterasi seluruh gen kromosom
+                if(i >= rowMarker){ //jika idx yg diakses lebih besar atau sama dengan rowMarker, maka telah terjadi pergantian baris
+                    rowIdx++; //tambah nilai rowIdx
+                    rowMarker += colSize;  //ubah rowMarker ke baris baru
+                }
+                if(rowIdx%2 == 0){ //jika idx baris saat ini habis dibagi 2, isi seluruh baris dengan gen kromosom 2
+                    crossoverChromosome.getGenes()[i] = chromosome2.getGenes()[i];
+                }
+                else{ //jika idx baris saat ini tidak dibagi 2, isi seluruh baris dengan gen kromosom 1
+                    crossoverChromosome.getGenes()[i] = chromosome1.getGenes()[i];
+                }
+            }
+        }
+        return crossoverChromosome; //kembalikan hasil kromosom crossover
     }
 }

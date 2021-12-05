@@ -1,6 +1,7 @@
 package testmario;
 
-//sumber kode algoritma genetik dari https://www.youtube.com/watch?v=UcVJsV-tqlo dan kode program yang diberikan ko Lionov di teams
+//sumber kode algoritma genetik dari https://www.youtube.com/watch?v=UcVJsV-tqlo
+//penggunaan random dan format output dari program yang diberikan ko Lionov di teams
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -41,7 +42,7 @@ public class Main {
 
         System.out.println();
 
-        sc = new Scanner(new File("input2.txt"));
+        sc = new Scanner(new File("input 10x10.txt")); //gunakan file "input (baris)x(kolom).txt" sebagai input jumlah baris, kolom, dan puzzle
         int rowSize = sc.nextInt();
         int colSize = sc.nextInt();
         GeneticAlgorithm.rowSize = rowSize; //isi jumlah baris puzzle dari input text
@@ -53,6 +54,15 @@ public class Main {
             GeneticAlgorithm.puzzle[i] = sc.next().charAt(0); //isi array char/puzzle dengan input text
         }
 
+        System.out.println("Deskripsi hasil solusi puzzle:");
+        System.out.println("x: petak kosong");
+        System.out.println("y: lampu");
+        System.out.println("n: tembok tanpa angka");
+        System.out.println("0: tembok berangka nol");
+        System.out.println("1: tembok berangka satu");
+        System.out.println("2: tembok berangka dua");
+        System.out.println("3: tembok berangka tiga");
+        System.out.println("4: tembok berangka empat");
         for(int i=1;i<=loop;i++){ //lakukan algoritma genetik sebanyak loop input
             seed = rand.nextLong();  //buat seed baru untuk generasi selanjutnya
             rand.setSeed(seed); //set seed baru pada objek Random
@@ -74,10 +84,10 @@ public class Main {
         int i = 0;
         while(i<genes.length){
             for(int j = 0; j<GeneticAlgorithm.colSize;j++){
-                if (genes[i] == 'a'){
+                if (genes[i] == 'a'){ //a adalah petak kosong yang tidak boleh dimutasi (print sebagai x agar mudah dibaca)
                     System.out.print('x');
                 }
-                else if (genes[i] == 'b'){
+                else if (genes[i] == 'b'){ //b adalah lampu yang tidak boleh dimutasi (print sebagai y agar mudah dibaca)
                     System.out.print('y');
                 }
                 else {
